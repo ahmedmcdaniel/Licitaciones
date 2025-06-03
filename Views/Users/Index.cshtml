@@ -1,0 +1,329 @@
+@model IEnumerable<Licitaciones.Models.User>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<div class="content-header animate__animated animate__fadeIn">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-users text-primary mr-2"></i>
+                    Gestión de Usuarios
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show animate__animated animate__fadeIn" role="alert">
+                <i class="fas fa-check-circle mr-2"></i>
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeIn" role="alert">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <!-- Formulario de Usuario -->
+        <div class="card card-primary animate__animated animate__fadeInDown mb-4">
+            <div class="card-header bg-gradient-primary">
+                <h3 class="card-title">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Crear / Editar Usuario
+                </h3>
+            </div>
+            <div class="card-body">
+                <form id="userForm" asp-action="Create" method="post">
+                    <input type="hidden" id="userId" name="Id" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-user mr-1"></i>
+                                    Nombre
+                                </label>
+                                <input type="text" class="form-control" id="name" name="Name" required 
+                                       placeholder="Nombre completo" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-envelope mr-1"></i>
+                                    Correo Electrónico
+                                </label>
+                                <input type="email" class="form-control" id="email" name="Email" required 
+                                       placeholder="correo@ejemplo.com" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-lock mr-1"></i>
+                                    Contraseña
+                                </label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="Dejar vacío para mantener actual" />
+                                <small class="form-text text-muted">
+                                    Mínimo 8 caracteres, incluir mayúsculas, minúsculas y números
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-user-tag mr-1"></i>
+                                    Rol
+                                </label>
+                                <select class="form-control" id="role" name="Role" required>
+                                    <option value="">Seleccione un rol...</option>
+                                    <option value="admin">Administrador</option>
+                                    <option value="evaluador">Evaluador</option>
+                                    <option value="proveedor">Proveedor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <div class="btn-group w-100">
+                                    <button type="submit" class="btn btn-primary" id="btnSave">
+                                        <i class="fas fa-save mr-1"></i>
+                                        Guardar
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="btnClear">
+                                        <i class="fas fa-eraser mr-1"></i>
+                                        Limpiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla de Usuarios -->
+        <div class="card animate__animated animate__fadeInUp">
+            <div class="card-header bg-gradient-info">
+                <h3 class="card-title">
+                    <i class="fas fa-list mr-2"></i>
+                    Lista de Usuarios
+                </h3>
+                <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 250px;">
+                        <input type="text" id="searchInput" class="form-control float-right" 
+                               placeholder="Buscar usuario...">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>
+                                <i class="fas fa-user mr-2"></i>
+                                Nombre
+                            </th>
+                            <th>
+                                <i class="fas fa-envelope mr-2"></i>
+                                Email
+                            </th>
+                            <th>
+                                <i class="fas fa-user-tag mr-2"></i>
+                                Rol
+                            </th>
+                            <th>
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                Fecha de Creación
+                            </th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="animate__animated animate__fadeIn" data-id="@item.Id">
+                                <td>@item.Name</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    @switch (item.Role)
+                                    {
+                                        case "admin":
+                                            <span class="badge badge-danger">
+                                                <i class="fas fa-user-shield mr-1"></i>
+                                                Administrador
+                                            </span>
+                                            break;
+                                        case "evaluador":
+                                            <span class="badge badge-info">
+                                                <i class="fas fa-star mr-1"></i>
+                                                Evaluador
+                                            </span>
+                                            break;
+                                        case "proveedor":
+                                            <span class="badge badge-success">
+                                                <i class="fas fa-truck mr-1"></i>
+                                                Proveedor
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td>@item.CreatedAt.ToLocalTime().ToString("g")</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-warning btn-sm btn-edit"
+                                                data-id="@item.Id"
+                                                data-name="@item.Name"
+                                                data-email="@item.Email"
+                                                data-role="@item.Role">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                data-id="@item.Id"
+                                                data-name="@item.Name">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="text-muted">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Total de usuarios: @Model.Count()
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function () {
+            // Inicializar tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Búsqueda en tiempo real
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("table tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            // Limpiar formulario
+            $("#btnClear").click(function() {
+                clearForm();
+            });
+
+            // Editar usuario
+            $(".btn-edit").click(function() {
+                var btn = $(this);
+                $("#userId").val(btn.data("id"));
+                $("#name").val(btn.data("name"));
+                $("#email").val(btn.data("email"));
+                $("#role").val(btn.data("role"));
+                $("#password").attr("placeholder", "Dejar vacío para mantener actual");
+                $("#userForm").attr("action", "/Users/Edit/" + btn.data("id"));
+                $("#btnSave").html('<i class="fas fa-save mr-1"></i>Actualizar');
+                
+                // Scroll al formulario
+                $('html, body').animate({
+                    scrollTop: $("#userForm").offset().top - 100
+                }, 500);
+            });
+
+            // Eliminar usuario
+            $(".btn-delete").click(function() {
+                var btn = $(this);
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: `¿Desea eliminar al usuario ${btn.data("name")}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/Users/Delete/${btn.data("id")}`;
+                    }
+                });
+            });
+
+            // Validación del formulario
+            $("#userForm").submit(function(e) {
+                var password = $("#password").val();
+                if (password) {
+                    if (password.length < 8) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error de validación',
+                            text: 'La contraseña debe tener al menos 8 caracteres'
+                        });
+                        return false;
+                    }
+                    
+                    if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error de validación',
+                            text: 'La contraseña debe incluir mayúsculas, minúsculas y números'
+                        });
+                        return false;
+                    }
+                }
+            });
+
+            function clearForm() {
+                $("#userId").val("");
+                $("#userForm").attr("action", "/Users/Create");
+                $("#userForm")[0].reset();
+                $("#password").attr("placeholder", "Contraseña para el nuevo usuario");
+                $("#btnSave").html('<i class="fas fa-save mr-1"></i>Guardar');
+            }
+
+            // Animación en hover de las filas
+            $("tbody tr").hover(
+                function() {
+                    $(this).addClass("animate__pulse");
+                },
+                function() {
+                    $(this).removeClass("animate__pulse");
+                }
+            );
+        });
+    </script>
+} 

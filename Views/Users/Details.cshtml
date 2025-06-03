@@ -1,0 +1,146 @@
+@model Licitaciones.Models.User
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+}
+
+<div class="content-header animate__animated animate__fadeIn">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-user text-primary mr-2"></i>
+                    Detalles del Usuario
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-primary card-outline animate__animated animate__fadeInLeft">
+                    <div class="card-body box-profile">
+                        <div class="text-center">
+                            <i class="fas fa-user-circle fa-4x text-primary"></i>
+                        </div>
+
+                        <h3 class="profile-username text-center">@Model.Name</h3>
+
+                        <p class="text-muted text-center">
+                            @switch (Model.Role)
+                            {
+                                case "admin":
+                                    <span class="badge badge-danger">
+                                        <i class="fas fa-user-shield mr-1"></i>
+                                        Administrador
+                                    </span>
+                                    break;
+                                case "evaluador":
+                                    <span class="badge badge-info">
+                                        <i class="fas fa-star mr-1"></i>
+                                        Evaluador
+                                    </span>
+                                    break;
+                                case "proveedor":
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-truck mr-1"></i>
+                                        Proveedor
+                                    </span>
+                                    break;
+                            }
+                        </p>
+
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b><i class="fas fa-envelope mr-2"></i>Email</b>
+                                <span class="float-right">@Model.Email</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b><i class="fas fa-calendar-alt mr-2"></i>Fecha de Registro</b>
+                                <span class="float-right">@Model.CreatedAt.ToLocalTime().ToString("g")</span>
+                            </li>
+                        </ul>
+
+                        <div class="text-center">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                                <i class="fas fa-edit mr-1"></i>
+                                Editar
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                                <i class="fas fa-trash mr-1"></i>
+                                Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card animate__animated animate__fadeInRight">
+                    <div class="card-header p-2">
+                        <ul class="nav nav-pills">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#activity" data-toggle="tab">
+                                    <i class="fas fa-chart-line mr-1"></i>
+                                    Actividad
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="activity">
+                                @if (Model.Role == "admin")
+                                {
+                                    <div class="info-box bg-gradient-primary">
+                                        <span class="info-box-icon">
+                                            <i class="fas fa-file-contract"></i>
+                                        </span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Licitaciones Creadas</span>
+                                            <span class="info-box-number">@Model.Tenders.Count</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.Role == "proveedor")
+                                {
+                                    <div class="info-box bg-gradient-success">
+                                        <span class="info-box-icon">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Propuestas Enviadas</span>
+                                            <span class="info-box-number">@Model.Proposals.Count</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.Role == "evaluador")
+                                {
+                                    <div class="info-box bg-gradient-info">
+                                        <span class="info-box-icon">
+                                            <i class="fas fa-star"></i>
+                                        </span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Evaluaciones Realizadas</span>
+                                            <span class="info-box-number">@Model.Evaluations.Count</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="text-center mt-3">
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left mr-1"></i>
+        Volver a la Lista
+    </a>
+</div> 

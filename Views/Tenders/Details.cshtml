@@ -1,0 +1,446 @@
+@model Licitaciones.Models.Tender
+
+@{
+    ViewData["Title"] = "Detalles de Licitación";
+}
+
+<div class="content-header animate__animated animate__fadeIn">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-file-contract text-primary mr-2"></i>
+                    Detalles de Licitación
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card animate__animated animate__fadeInLeft">
+                    <div class="card-header bg-gradient-info text-white">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Información de la Licitación
+                        </h3>
+                        <div class="card-tools">
+                            <span class="badge @(Model.Status == "abierta" ? "bg-success" : 
+                                               Model.Status == "evaluacion" ? "bg-warning" :
+                                               Model.Status == "evaluada" ? "bg-info" : "bg-danger")">
+                                @Model.Status.ToUpper()
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="info-box bg-light">
+                                    <span class="info-box-icon bg-primary"><i class="fas fa-calendar-alt"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Fecha de Inicio</span>
+                                        <span class="info-box-number">@Model.StartDate.ToLocalTime().ToString("dd/MM/yyyy")</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box bg-light">
+                                    <span class="info-box-icon bg-danger"><i class="fas fa-calendar-check"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Fecha de Cierre</span>
+                                        <span class="info-box-number">@Model.EndDate.ToLocalTime().ToString("dd/MM/yyyy")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-outline card-primary mb-4">
+                            <div class="card-header">
+                                <h3 class="card-title">Detalles Principales</h3>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="text-primary">@Model.Title</h4>
+                                <p class="text-muted">@Model.Description</p>
+                                
+                                <hr>
+                                
+                                <h5><i class="fas fa-list-ul text-info mr-2"></i>Requisitos</h5>
+                                <p>@Model.Requirements</p>
+                                
+                                @if (Model.Budget.HasValue)
+                                {
+                                    <hr>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-dollar-sign text-success fa-2x mr-3"></i>
+                                        <div>
+                                            <h5 class="mb-0">Presupuesto</h5>
+                                            <h3 class="text-success mb-0">@Model.Budget.Value.ToString("C")</h3>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        @if (Model.Documents.Any())
+                        {
+                            <div class="card card-outline card-info animate__animated animate__fadeIn">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-file-alt mr-2"></i>Documentos</h3>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th><i class="fas fa-file mr-2"></i>Nombre</th>
+                                                    <th><i class="fas fa-tag mr-2"></i>Tipo</th>
+                                                    <th><i class="fas fa-clock mr-2"></i>Fecha</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var doc in Model.Documents)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <i class="@(doc.DocumentType == "PDF" ? "fas fa-file-pdf text-danger" :
+                                                                      doc.DocumentType == "DOCX" ? "fas fa-file-word text-primary" :
+                                                                      "fas fa-file-excel text-success") mr-2"></i>
+                                                            @doc.FileName
+                                                        </td>
+                                                        <td><span class="badge badge-info">@doc.DocumentType</span></td>
+                                                        <td>@doc.UploadedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                                        <td>
+                                                            <a href="/@doc.FilePath" class="btn btn-outline-primary btn-sm" target="_blank"
+                                                               data-toggle="tooltip" title="Descargar documento">
+                                                                <i class="fas fa-download"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.Proposals.Any())
+                        {
+                            <div class="card card-outline card-success animate__animated animate__fadeIn">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-paper-plane mr-2"></i>
+                                        Propuestas Recibidas
+                                    </h3>
+                                    <div class="card-tools">
+                                        <span class="badge badge-primary">
+                                            Total: @Model.Proposals.Count()
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th><i class="fas fa-user mr-2"></i>Proveedor</th>
+                                                    <th><i class="fas fa-dollar-sign mr-2"></i>Monto</th>
+                                                    <th><i class="fas fa-info-circle mr-2"></i>Estado</th>
+                                                    <th><i class="fas fa-calendar mr-2"></i>Fecha</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var proposal in Model.Proposals)
+                                                {
+                                                    <tr>
+                                                        <td>@proposal.Provider.Name</td>
+                                                        <td class="text-success font-weight-bold">@proposal.Amount.ToString("C")</td>
+                                                        <td>
+                                                            <span class="badge @(proposal.Status == "enviada" ? "badge-primary" : 
+                                                                               proposal.Status == "evaluada" ? "badge-success" : 
+                                                                               "badge-warning")">
+                                                                @proposal.Status.ToUpper()
+                                                            </span>
+                                                        </td>
+                                                        <td>@proposal.SubmittedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                                        <td>
+                                                            <a asp-controller="Proposals" asp-action="Details" asp-route-id="@proposal.Id" 
+                                                               class="btn btn-outline-info btn-sm" data-toggle="tooltip" title="Ver detalles">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.Status == "evaluada" && User.IsInRole("admin"))
+                        {
+                            <div class="card mt-4">
+                                <div class="card-header bg-success">
+                                    <h3 class="card-title text-white">
+                                        <i class="fas fa-trophy mr-2"></i>
+                                        Seleccionar Ganador
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Proveedor</th>
+                                                    <th>Monto</th>
+                                                    <th>Evaluaciones</th>
+                                                    <th>Promedio</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var proposal in Model.Proposals.Where(p => p.Status == "evaluada"))
+                                                {
+                                                    var avgScore = proposal.Evaluations.Any() 
+                                                        ? proposal.Evaluations.Average(e => (e.TechnicalScore * 0.7m) + (e.FinancialScore * 0.3m))
+                                                        : 0;
+                                                    <tr>
+                                                        <td>@proposal.Provider.Name</td>
+                                                        <td>@proposal.Amount.ToString("C")</td>
+                                                        <td>@proposal.Evaluations.Count</td>
+                                                        <td>@avgScore.ToString("N2")</td>
+                                                        <td>
+                                                            <form asp-action="SelectWinner" method="post" style="display: inline;">
+                                                                @Html.AntiForgeryToken()
+                                                                <input type="hidden" name="tenderId" value="@Model.Id" />
+                                                                <input type="hidden" name="proposalId" value="@proposal.Id" />
+                                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Está seguro de seleccionar esta propuesta como ganadora? La licitación se cerrará.')">
+                                                                    <i class="fas fa-crown"></i> Seleccionar Ganador
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        
+                        @if (Model.Status == "cerrada" && Model.Results.Any())
+                        {
+                            var result = Model.Results.First();
+                            <div class="card mt-4">
+                                <div class="card-header bg-success">
+                                    <h3 class="card-title text-white">
+                                        <i class="fas fa-trophy mr-2"></i>
+                                        Resultado Final
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-success">
+                                        <h5><i class="fas fa-crown mr-2"></i>Propuesta Ganadora</h5>
+                                        <p class="mb-0">
+                                            <strong>Proveedor:</strong> @result.WinningProposal.Provider.Name<br />
+                                            <strong>Monto:</strong> @result.WinningProposal.Amount.ToString("C")<br />
+                                            <strong>Fecha de Publicación:</strong> @result.PublishedAt?.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            @if (User.IsInRole("admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-danger delete-confirmation">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </form>
+                            }
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Volver
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Información adicional -->
+                <div class="card card-primary animate__animated animate__fadeInRight">
+                    <div class="card-header bg-gradient-primary">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Información Adicional
+                        </h3>
+                    </div>
+                    <div class="card-body box-profile">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-user-circle fa-4x text-primary"></i>
+                        </div>
+                        
+                        <h3 class="profile-username text-center">@Model.CreatedBy?.Name</h3>
+                        <p class="text-muted text-center">Creador de la Licitación</p>
+
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b><i class="fas fa-clock mr-2"></i>Fecha de Creación</b>
+                                <span class="float-right">@Model.CreatedAt.ToLocalTime().ToString("g")</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b><i class="fas fa-paper-plane mr-2"></i>Propuestas</b>
+                                <span class="float-right">@Model.Proposals.Count()</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b><i class="fas fa-file mr-2"></i>Documentos</b>
+                                <span class="float-right">@Model.Documents.Count()</span>
+                            </li>
+                        </ul>
+
+                        @if (Model.Status == "abierta")
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-clock mr-2"></i>
+                                Tiempo restante:
+                                <strong id="countdown"></strong>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (User.IsInRole("proveedor"))
+                {
+                    var userId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+                    var hasProposal = Model.Proposals.Any(p => p.ProviderId == userId);
+
+                    @if (Model.Status == "abierta")
+                    {
+                        if (!hasProposal)
+                        {
+                            <!-- Botón de propuesta -->
+                            <div class="card card-success animate__animated animate__fadeInRight">
+                                <div class="card-header bg-gradient-success">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-paper-plane mr-2"></i>
+                                        Enviar Propuesta
+                                    </h3>
+                                </div>
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-signature fa-4x text-success mb-3"></i>
+                                    <p>¿Está interesado en participar en esta licitación?</p>
+                                    <a asp-controller="Proposals" asp-action="Create" asp-route-tenderId="@Model.Id" 
+                                       class="btn btn-success btn-lg btn-block animate__animated animate__pulse animate__infinite">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Crear Propuesta
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Mensaje de propuesta existente -->
+                            <div class="card card-warning animate__animated animate__fadeInRight">
+                                <div class="card-header bg-gradient-warning">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-info-circle mr-2"></i>
+                                        Propuesta Enviada
+                                    </h3>
+                                </div>
+                                <div class="card-body text-center">
+                                    <i class="fas fa-check-circle fa-4x text-warning mb-3"></i>
+                                    <p>Ya has enviado una propuesta para esta licitación.</p>
+                                    <p class="text-muted">Solo se permite una propuesta por proveedor.</p>
+                                    <a asp-controller="Proposals" asp-action="Index" class="btn btn-warning btn-block">
+                                        <i class="fas fa-list mr-2"></i>
+                                        Ver Mis Propuestas
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    Confirmar Eliminación
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Está seguro que desea eliminar esta licitación?</p>
+                <small class="text-danger">Esta acción no se puede deshacer.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-2"></i>Cancelar
+                </button>
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash mr-2"></i>Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Inicializar tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            // Contador regresivo
+            function updateCountdown() {
+                var endDate = new Date('@Model.EndDate.ToString("o")');
+                var now = new Date();
+                var diff = endDate - now;
+                
+                if (diff > 0) {
+                    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    $('#countdown').html(days + ' días, ' + hours + ' horas, ' + minutes + ' minutos');
+                } else {
+                    $('#countdown').html('Licitación cerrada');
+                }
+            }
+            
+            if ('@Model.Status' === 'abierta') {
+                updateCountdown();
+                setInterval(updateCountdown, 60000); // Actualizar cada minuto
+            }
+            
+            // Animaciones en hover
+            $('.btn').hover(
+                function() { $(this).addClass('animate__animated animate__pulse'); },
+                function() { $(this).removeClass('animate__animated animate__pulse'); }
+            );
+        });
+    </script>
+} 

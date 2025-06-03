@@ -1,0 +1,216 @@
+@model IEnumerable<Licitaciones.Models.Tender>
+
+@{
+    ViewData["Title"] = "Licitaciones";
+    var userId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+}
+
+<!-- Filtros y búsqueda -->
+<div class="row mb-4 animate__animated animate__fadeIn">
+    <div class="col-md-8">
+        <div class="input-group">
+            <input type="text" class="form-control" id="searchInput" placeholder="Buscar licitaciones...">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <select class="form-control" id="statusFilter">
+            <option value="">Todos los estados</option>
+            <option value="abierta">Abiertas</option>
+            <option value="evaluacion">En evaluación</option>
+            <option value="evaluada">Evaluadas</option>
+            <option value="cerrada">Cerradas</option>
+        </select>
+    </div>
+</div>
+
+<!-- Card tools and actions -->
+<div class="card animate__animated animate__fadeInUp">
+    <div class="card-header bg-gradient-primary text-white">
+        <h3 class="card-title">
+            <i class="fas fa-file-contract mr-2"></i>
+            Listado de Licitaciones
+        </h3>
+        <div class="card-tools">
+            @if (User.IsInRole("admin"))
+            {
+                <a asp-action="Create" class="btn btn-light">
+                    <i class="fas fa-plus"></i> Nueva Licitación
+                </a>
+            }
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row" id="tendersContainer">
+            @foreach (var item in Model)
+            {
+                var isWinner = item.Status == "cerrada" && 
+                              item.Results.Any() && 
+                              item.Results.First().WinningProposal.ProviderId == userId;
+                
+                <div class="col-md-6 col-lg-4 mb-4 tender-card" data-status="@item.Status">
+                    <div class="card h-100 animate__animated animate__fadeIn @(isWinner ? "border border-success" : "")">
+                        <div class="ribbon-wrapper ribbon-lg">
+                            <div class="ribbon @(item.Status == "abierta" ? "bg-success" : 
+                                               item.Status == "evaluacion" ? "bg-warning" :
+                                               item.Status == "evaluada" ? "bg-info" : "bg-danger")">
+                                @item.Status.ToUpper()
+                            </div>
+                        </div>
+                        @if (isWinner)
+                        {
+                            <div class="position-absolute" style="top: 10px; left: 10px;">
+                                <span class="badge badge-success">
+                                    <i class="fas fa-trophy"></i> ¡Ganador!
+                                </span>
+                            </div>
+                        }
+                        <div class="card-header">
+                            <h5 class="card-title m-0">@item.Title</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-muted mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span><i class="fas fa-calendar-alt"></i> Inicio</span>
+                                    <span class="badge badge-light">@item.StartDate.ToShortDateString()</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span><i class="fas fa-calendar-check"></i> Fin</span>
+                                    <span class="badge badge-light">@item.EndDate.ToShortDateString()</span>
+                                </div>
+                                @if (item.Budget.HasValue)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-dollar-sign"></i> Presupuesto</span>
+                                        <span class="badge badge-light">@item.Budget.Value.ToString("C")</span>
+                                    </div>
+                                }
+                            </div>
+                            <p class="card-text">@(item.Description?.Length > 150 ? item.Description.Substring(0, 147) + "..." : item.Description)</p>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <div class="btn-group float-right">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm" 
+                                   data-toggle="tooltip" title="Ver detalles">
+                                    <i class="fas fa-info-circle"></i> Detalles
+                                </a>
+                                @if (User.IsInRole("admin"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm"
+                                       data-toggle="tooltip" title="Editar licitación">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                }
+                            </div>
+                            @if (item.Status == "abierta" && !User.IsInRole("admin"))
+                            {
+                                <a asp-controller="Proposals" asp-action="Create" asp-route-tenderId="@item.Id" 
+                                   class="btn btn-success btn-sm float-left">
+                                    <i class="fas fa-paper-plane"></i> Enviar Propuesta
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Inicializar tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            // Filtrado por estado
+            $('#statusFilter').on('change', function() {
+                var status = $(this).val();
+                if (status) {
+                    $('.tender-card').hide();
+                    $('.tender-card[data-status="' + status + '"]').show();
+                } else {
+                    $('.tender-card').show();
+                }
+            });
+            
+            // Búsqueda en tiempo real
+            $('#searchInput').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                $('.tender-card').filter(function() {
+                    var text = $(this).text().toLowerCase();
+                    $(this).toggle(text.indexOf(value) > -1);
+                });
+            });
+            
+            // Animación al hacer hover en las cards
+            $('.tender-card').hover(
+                function() {
+                    $(this).find('.card').addClass('shadow-lg');
+                },
+                function() {
+                    $(this).find('.card').removeClass('shadow-lg');
+                }
+            );
+            
+            // Contador de días restantes
+            $('.tender-card').each(function() {
+                var endDate = new Date($(this).find('.badge:eq(1)').text());
+                var today = new Date();
+                var daysLeft = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+                
+                if (daysLeft > 0) {
+                    $(this).find('.card-body').append(
+                        '<div class="mt-3 text-center">' +
+                        '<span class="badge badge-primary">' +
+                        '<i class="fas fa-clock"></i> ' + daysLeft + ' días restantes' +
+                        '</span></div>'
+                    );
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        .ribbon-wrapper {
+            height: 70px;
+            overflow: hidden;
+            position: absolute;
+            right: -2px;
+            top: -2px;
+            width: 70px;
+            z-index: 10;
+        }
+        
+        .ribbon {
+            box-shadow: 0 0 3px rgba(0,0,0,.3);
+            font-size: 0.8rem;
+            line-height: 100%;
+            padding: 0.375rem 0;
+            position: relative;
+            right: -2px;
+            text-align: center;
+            text-shadow: 0 -1px 0 rgba(0,0,0,.4);
+            text-transform: uppercase;
+            top: 10px;
+            transform: rotate(45deg);
+            width: 90px;
+        }
+        
+        .card-header h5 {
+            margin-right: 30px;
+        }
+        
+        .badge {
+            font-size: 0.85rem;
+        }
+        
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+    </style>
+} 

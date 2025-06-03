@@ -1,0 +1,136 @@
+@model Licitaciones.Models.Evaluation
+
+@{
+    ViewData["Title"] = "Detalles de Evaluación";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Detalles de Evaluación</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Información de la Propuesta</h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-3">Licitación</dt>
+                            <dd class="col-sm-9">@Model.Proposal.Tender.Title</dd>
+
+                            <dt class="col-sm-3">Proveedor</dt>
+                            <dd class="col-sm-9">@Model.Proposal.Provider.Name</dd>
+
+                            <dt class="col-sm-3">Estado</dt>
+                            <dd class="col-sm-9">@Model.Proposal.Status</dd>
+
+                            <dt class="col-sm-3">Monto</dt>
+                            <dd class="col-sm-9">@Model.Proposal.Amount.ToString("C")</dd>
+
+                            <dt class="col-sm-3">Fecha de Envío</dt>
+                            <dd class="col-sm-9">@Model.Proposal.SubmittedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+                        </dl>
+
+                        <h4 class="mt-4">Documentos de la Propuesta</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha de Subida</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var doc in Model.Proposal.Documents)
+                                    {
+                                        <tr>
+                                            <td>@doc.DocumentType</td>
+                                            <td>@doc.FileName</td>
+                                            <td>@doc.UploadedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                <a href="/@doc.FilePath" class="btn btn-primary btn-sm" target="_blank">
+                                                    <i class="fas fa-download"></i> Descargar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalles de la Evaluación</h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-3">Evaluador</dt>
+                            <dd class="col-sm-9">@Model.Evaluator.Name</dd>
+
+                            <dt class="col-sm-3">Puntuación Técnica</dt>
+                            <dd class="col-sm-9">@Model.TechnicalScore.ToString("N2")</dd>
+
+                            <dt class="col-sm-3">Puntuación Financiera</dt>
+                            <dd class="col-sm-9">@Model.FinancialScore.ToString("N2")</dd>
+
+                            <dt class="col-sm-3">Puntuación Total</dt>
+                            <dd class="col-sm-9">@Model.TotalScore.ToString("N2")</dd>
+
+                            <dt class="col-sm-3">Fecha de Evaluación</dt>
+                            <dd class="col-sm-9">@Model.EvaluatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+
+                            <dt class="col-sm-3">Comentarios</dt>
+                            <dd class="col-sm-9">@Model.Comments</dd>
+                        </dl>
+                    </div>
+                    <div class="card-footer">
+                        @if (User.IsInRole("admin") || (User.IsInRole("evaluador") && Model.Evaluator.Email == User.Identity.Name))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                                Eliminar
+                            </button>
+                        }
+                        <a asp-controller="Proposals" asp-action="Details" asp-route-id="@Model.ProposalId" class="btn btn-secondary">Volver a la Propuesta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro que desea eliminar esta evaluación?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

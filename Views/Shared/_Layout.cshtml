@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sistema de Licitaciones</title>
+    
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- NProgress -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .main-sidebar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        .nav-sidebar .nav-item .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-sidebar .nav-item .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .content-wrapper {
+            background: #f4f6f9;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .btn {
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .navbar {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .brand-link {
+            transition: all 0.3s ease;
+        }
+        .brand-link:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* SweetAlert2 customization */
+        .swal2-popup {
+            font-family: 'Poppins', sans-serif;
+        }
+        .swal2-title {
+            font-size: 1.5em;
+        }
+        .swal2-content {
+            font-size: 1.1em;
+        }
+        .swal2-confirm {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light animate__animated animate__fadeIn">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-lg"></i>
+                        <span class="d-none d-md-inline">@User.Identity?.Name</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right animate__animated animate__fadeIn">
+                        <li class="user-header bg-primary">
+                            <i class="fas fa-user-circle fa-5x text-white"></i>
+                            <p>
+                                @User.Identity?.Name
+                                <small>@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value</small>
+                            </p>
+                        </li>
+                        <li class="user-footer">
+                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                <button type="submit" class="btn btn-default btn-flat float-right">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar elevation-4 animate__animated animate__slideInLeft">
+            <!-- Brand Logo -->
+            <a asp-controller="Home" asp-action="Index" class="brand-link">
+                <i class="fas fa-gavel brand-image elevation-3" style="opacity: .8"></i>
+                <span class="brand-text font-weight-light">Licitaciones</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item">
+                            <a asp-controller="Tenders" asp-action="Index" class="nav-link">
+                                <i class="nav-icon fas fa-file-contract"></i>
+                                <p>Licitaciones</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Proposals" asp-action="Index" class="nav-link">
+                                <i class="nav-icon fas fa-paper-plane"></i>
+                                <p>Propuestas</p>
+                            </a>
+                        </li>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Users" asp-action="Index" class="nav-link">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>Usuarios</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper animate__animated animate__fadeIn">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="animate__animated animate__fadeInLeft">@ViewData["Title"]</h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 1.0.0
+            </div>
+            <strong>Copyright &copy; @DateTime.Now.Year <a href="#">Sistema de Licitaciones</a>.</strong> Todos los derechos reservados.
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Inicializar NProgress
+            NProgress.configure({ showSpinner: false });
+            
+            // Mostrar barra de progreso en navegación
+            $(document).on('click', 'a', function() {
+                NProgress.start();
+            });
+            
+            // Animaciones en hover
+            $('.card').hover(
+                function() { $(this).addClass('shadow-lg'); },
+                function() { $(this).removeClass('shadow-lg'); }
+            );
+            
+            // Tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Manejar mensajes TempData con SweetAlert2
+            @if (TempData["Success"] != null)
+            {
+                <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: '@TempData["Success"]',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                </text>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '@TempData["Error"]',
+                    confirmButtonText: 'Entendido'
+                });
+                </text>
+            }
+
+            @if (TempData["Warning"] != null)
+            {
+                <text>
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Advertencia',
+                    text: '@TempData["Warning"]',
+                    confirmButtonText: 'Entendido'
+                });
+                </text>
+            }
+
+            @if (TempData["Info"] != null)
+            {
+                <text>
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Información',
+                    text: '@TempData["Info"]',
+                    confirmButtonText: 'Entendido'
+                });
+                </text>
+            }
+
+            // Confirmación de eliminación
+            $('.delete-confirmation').on('click', function(e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
+                
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "Esta acción no se puede deshacer",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+        
+        // Completar barra de progreso cuando la página termina de cargar
+        $(window).on('load', function() {
+            NProgress.done();
+        });
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

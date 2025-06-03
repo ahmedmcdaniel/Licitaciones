@@ -1,0 +1,197 @@
+@model Licitaciones.Models.Tender
+
+@{
+    ViewData["Title"] = "Editar Licitación";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Información de la Licitación</h3>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="CreatedById" />
+                    <input type="hidden" asp-for="CreatedAt" />
+                    <input type="hidden" asp-for="CreatedByNavigation" />
+
+                    <div class="form-group">
+                        <label asp-for="Title" class="form-label">Título</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-heading"></i></span>
+                            <input asp-for="Title" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label asp-for="Description" class="form-label">Descripción</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        </div>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label asp-for="Requirements" class="form-label">Requisitos</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-list"></i></span>
+                            <textarea asp-for="Requirements" class="form-control" rows="4"></textarea>
+                        </div>
+                        <span asp-validation-for="Requirements" class="text-danger"></span>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="StartDate" class="form-label">Fecha de Inicio</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                    <input asp-for="StartDate" class="form-control" type="date" />
+                                </div>
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="EndDate" class="form-label">Fecha de Cierre</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                    <input asp-for="EndDate" class="form-control" type="date" />
+                                </div>
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label asp-for="Status" class="form-label">Estado</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                            <select asp-for="Status" class="form-select">
+                                <option value="abierta">Abierta</option>
+                                <option value="evaluacion">En Evaluación</option>
+                                <option value="evaluada">Evaluada</option>
+                                <option value="cerrada">Cerrada</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Documents != null && Model.Documents.Any())
+            {
+                <div class="card card-info mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Documentos Actuales</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                    @foreach (var doc in Model.Documents)
+                                    {
+                                        <tr>
+                                            <td><i class="fas fa-file"></i> @doc.FileName</td>
+                                            <td class="text-right py-0 align-middle">
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="/@doc.FilePath" class="btn btn-primary" target="_blank">
+                                                        <i class="fas fa-download"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger" onclick="deleteDocument('@doc.Id')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card card-success mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Agregar Nuevos Documentos</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-file-upload"></i></span>
+                            <input type="file" name="newDocuments" multiple class="form-control" />
+                        </div>
+                        <small class="text-muted">Puede seleccionar múltiples archivos</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-secondary mt-4">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver a la Lista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            // Validación de fechas
+            $('form').submit(function (e) {
+                var startDate = new Date($('#StartDate').val());
+                var endDate = new Date($('#EndDate').val());
+                
+                if (startDate >= endDate) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'La fecha de cierre debe ser posterior a la fecha de inicio'
+                    });
+                }
+            });
+        });
+
+        // Función para eliminar documentos
+        function deleteDocument(documentId) {
+            Swal.fire({
+                title: '¿Está seguro?',
+                text: '¿Desea eliminar este documento?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/Tenders/DeleteDocument/' + documentId, 
+                        { '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() })
+                        .done(function () {
+                            location.reload();
+                        })
+                        .fail(function () {
+                            Swal.fire('Error', 'No se pudo eliminar el documento', 'error');
+                        });
+                }
+            });
+        }
+    </script>
+} 

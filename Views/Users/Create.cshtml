@@ -1,0 +1,173 @@
+@model Licitaciones.Models.User
+
+@{
+    ViewData["Title"] = "Nuevo Usuario";
+}
+
+<div class="content-header animate__animated animate__fadeIn">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-user-plus text-primary mr-2"></i>
+                    Nuevo Usuario
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-primary animate__animated animate__fadeInLeft">
+                    <div class="card-header bg-gradient-primary">
+                        <h3 class="card-title">
+                            <i class="fas fa-user-edit mr-2"></i>
+                            Datos del Usuario
+                        </h3>
+                    </div>
+                    <form asp-action="Create">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label">
+                                    <i class="fas fa-user mr-1"></i>
+                                    Nombre
+                                </label>
+                                <input asp-for="Name" class="form-control" placeholder="Ingrese el nombre completo" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label">
+                                    <i class="fas fa-envelope mr-1"></i>
+                                    Email
+                                </label>
+                                <input asp-for="Email" class="form-control" placeholder="Ingrese el correo electrónico" type="email" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password" class="control-label">
+                                    <i class="fas fa-lock mr-1"></i>
+                                    Contraseña
+                                </label>
+                                <input type="password" name="password" id="password" class="form-control" required 
+                                       placeholder="Ingrese la contraseña" />
+                                <small class="form-text text-muted">
+                                    La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números.
+                                </small>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Role" class="control-label">
+                                    <i class="fas fa-user-tag mr-1"></i>
+                                    Rol
+                                </label>
+                                <select asp-for="Role" class="form-control">
+                                    <option value="">Seleccione un rol...</option>
+                                    <option value="admin">Administrador</option>
+                                    <option value="evaluador">Evaluador</option>
+                                    <option value="proveedor">Proveedor</option>
+                                </select>
+                                <span asp-validation-for="Role" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save mr-1"></i>
+                                Guardar
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left mr-1"></i>
+                                Volver a la Lista
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card animate__animated animate__fadeInRight">
+                    <div class="card-header bg-gradient-info">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Información de Roles
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="callout callout-danger">
+                            <h5><i class="fas fa-user-shield mr-2"></i>Administrador</h5>
+                            <p>Tiene acceso completo al sistema. Puede:</p>
+                            <ul>
+                                <li>Gestionar usuarios</li>
+                                <li>Crear y gestionar licitaciones</li>
+                                <li>Ver todas las propuestas</li>
+                                <li>Administrar el sistema</li>
+                            </ul>
+                        </div>
+
+                        <div class="callout callout-info">
+                            <h5><i class="fas fa-star mr-2"></i>Evaluador</h5>
+                            <p>Encargado de evaluar las propuestas. Puede:</p>
+                            <ul>
+                                <li>Ver licitaciones</li>
+                                <li>Ver propuestas</li>
+                                <li>Evaluar propuestas</li>
+                                <li>Gestionar sus evaluaciones</li>
+                            </ul>
+                        </div>
+
+                        <div class="callout callout-success">
+                            <h5><i class="fas fa-truck mr-2"></i>Proveedor</h5>
+                            <p>Participa en las licitaciones. Puede:</p>
+                            <ul>
+                                <li>Ver licitaciones abiertas</li>
+                                <li>Enviar propuestas</li>
+                                <li>Gestionar sus propuestas</li>
+                                <li>Ver resultados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function () {
+            // Validación de contraseña
+            $('form').submit(function (e) {
+                var password = $('#password').val();
+                if (password.length < 8) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'La contraseña debe tener al menos 8 caracteres'
+                    });
+                    return false;
+                }
+                
+                if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de validación',
+                        text: 'La contraseña debe incluir mayúsculas, minúsculas y números'
+                    });
+                    return false;
+                }
+                
+                return true;
+            });
+        });
+    </script>
+} 

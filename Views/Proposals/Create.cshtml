@@ -1,0 +1,375 @@
+@{
+    ViewData["Title"] = "Nueva Propuesta";
+    var tender = ViewBag.Tender as Licitaciones.Models.Tender;
+}
+
+<div class="content-header animate__animated animate__fadeIn">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-paper-plane text-primary mr-2"></i>
+                    Nueva Propuesta
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-action="Create" enctype="multipart/form-data" method="post" id="proposalForm">
+                    <div class="card card-primary animate__animated animate__fadeInLeft">
+                        <div class="card-header bg-gradient-primary">
+                            <h3 class="card-title">
+                                <i class="fas fa-edit mr-2"></i>
+                                Formulario de Propuesta
+                            </h3>
+                            <div class="card-tools">
+                                <div id="countdown" class="text-white"></div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="callout callout-info animate__animated animate__fadeIn">
+                                <h5>
+                                    <i class="fas fa-info-circle text-info mr-2"></i>
+                                    Detalles de la Licitación
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="info-box bg-light">
+                                            <span class="info-box-icon bg-info">
+                                                <i class="fas fa-file-contract"></i>
+                                            </span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Título</span>
+                                                <span class="info-box-number">@tender.Title</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-box bg-light">
+                                            <span class="info-box-icon bg-warning">
+                                                <i class="fas fa-clock"></i>
+                                            </span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Fecha de Cierre</span>
+                                                <span class="info-box-number">@tender.EndDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0">@tender.Description</p>
+                                @if (tender.Budget.HasValue)
+                                {
+                                    <div class="mt-3 text-right">
+                                        <span class="badge badge-success p-2">
+                                            <i class="fas fa-dollar-sign mr-1"></i>
+                                            Presupuesto Máximo: @tender.Budget.Value.ToString("C")
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+
+                            <input type="hidden" name="tenderId" value="@tender.Id" />
+
+                            <div class="form-group mt-4 animate__animated animate__fadeIn">
+                                <label class="form-label">
+                                    <i class="fas fa-align-left text-primary mr-2"></i>
+                                    Descripción de la Propuesta
+                                </label>
+                                <div class="input-group">
+                                    <textarea name="description" class="form-control" rows="4" required 
+                                            placeholder="Describa los aspectos más importantes de su propuesta"
+                                            style="resize: none;"></textarea>
+                                </div>
+                                <div class="progress mt-2" style="height: 3px;">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted float-right">
+                                    <span id="charCount">0</span>/1000 caracteres
+                                </small>
+                            </div>
+
+                            <div class="form-group mt-4 animate__animated animate__fadeIn">
+                                <label class="form-label">
+                                    <i class="fas fa-dollar-sign text-success mr-2"></i>
+                                    Monto Propuesto
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="number" name="amount" class="form-control" step="0.01" min="0" required
+                                           placeholder="Ingrese el monto total de su propuesta" />
+                                </div>
+                                @if (tender.Budget.HasValue)
+                                {
+                                    <div class="mt-2">
+                                        <div class="progress" style="height: 5px;">
+                                            <div id="amountProgress" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <small class="text-muted float-right">
+                                            Porcentaje del presupuesto: <span id="budgetPercentage">0</span>%
+                                        </small>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-file-alt text-info mr-2"></i>
+                                    Documento Técnico *
+                                </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="technicalDoc" name="technicalDoc" required>
+                                    <label class="custom-file-label" for="technicalDoc">Seleccionar archivo...</label>
+                                </div>
+                                <small class="form-text text-muted">Formatos permitidos: PDF, Word, Excel</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-file-invoice-dollar text-success mr-2"></i>
+                                    Documento Financiero *
+                                </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="financialDoc" name="financialDoc" required>
+                                    <label class="custom-file-label" for="financialDoc">Seleccionar archivo...</label>
+                                </div>
+                                <small class="form-text text-muted">Formatos permitidos: PDF, Word, Excel</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-file-upload text-warning mr-2"></i>
+                                    Documentos Adicionales
+                                </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="additionalDocs" name="additionalDocs" multiple>
+                                    <label class="custom-file-label" for="additionalDocs">Seleccionar archivos...</label>
+                                </div>
+                                <small class="form-text text-muted">Puede seleccionar múltiples archivos. Formatos permitidos: PDF, Word, Excel</small>
+                            </div>
+
+                            <div class="callout callout-warning mt-4 animate__animated animate__fadeIn">
+                                <h5>
+                                    <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+                                    Importante
+                                </h5>
+                                <ul class="mb-0 fa-ul">
+                                    <li>
+                                        <span class="fa-li"><i class="fas fa-check text-success"></i></span>
+                                        Asegúrese de incluir toda la documentación requerida
+                                    </li>
+                                    <li>
+                                        <span class="fa-li"><i class="fas fa-check text-success"></i></span>
+                                        Los documentos deben estar en formato PDF, Word o Excel
+                                    </li>
+                                    <li>
+                                        <span class="fa-li"><i class="fas fa-check text-success"></i></span>
+                                        Una vez enviada la propuesta, no podrá modificarla
+                                    </li>
+                                    <li>
+                                        <span class="fa-li"><i class="fas fa-check text-success"></i></span>
+                                        Verifique que el monto propuesto sea correcto
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Enviar Propuesta
+                            </button>
+                            <a asp-controller="Tenders" asp-action="Details" asp-route-id="@tender.Id" 
+                               class="btn btn-secondary btn-lg ml-2">
+                                <i class="fas fa-arrow-left mr-2"></i>
+                                Volver
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-info animate__animated animate__fadeInRight">
+                    <div class="card-header bg-gradient-info">
+                        <h3 class="card-title">
+                            <i class="fas fa-question-circle mr-2"></i>
+                            Ayuda
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="time-label">
+                                <span class="bg-info">Guía de Llenado</span>
+                            </div>
+                            
+                            <div>
+                                <i class="fas fa-align-left bg-primary"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header">Descripción</h3>
+                                    <div class="timeline-body">
+                                        Explique brevemente los aspectos más relevantes de su propuesta y cómo cumple con los requisitos solicitados.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <i class="fas fa-dollar-sign bg-success"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header">Monto</h3>
+                                    <div class="timeline-body">
+                                        Ingrese el monto total de su propuesta. Este debe incluir todos los costos asociados.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <i class="fas fa-file-alt bg-info"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header">Documento Técnico</h3>
+                                    <div class="timeline-body">
+                                        Debe incluir todos los detalles técnicos de su propuesta, metodología, plan de trabajo, etc.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <i class="fas fa-file-invoice-dollar bg-warning"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header">Documento Financiero</h3>
+                                    <div class="timeline-body">
+                                        Debe detallar los costos, presupuesto desglosado y cualquier consideración financiera.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            // Inicializar bs-custom-file-input
+            bsCustomFileInput.init();
+            
+            // Contador de caracteres en descripción
+            $('textarea[name="description"]').on('input', function() {
+                var maxLength = 1000;
+                var currentLength = $(this).val().length;
+                var percentage = (currentLength / maxLength) * 100;
+                
+                $('#charCount').text(currentLength);
+                $('.progress-bar').css('width', percentage + '%');
+                
+                if (currentLength > maxLength) {
+                    $(this).val($(this).val().substring(0, maxLength));
+                }
+            });
+            
+            // Validación del monto y cálculo de porcentaje
+            @if (tender.Budget.HasValue)
+            {
+                <text>
+                $('input[name="amount"]').on('input', function() {
+                    var amount = parseFloat($(this).val()) || 0;
+                    var budget = @tender.Budget.Value;
+                    var percentage = (amount / budget) * 100;
+                    
+                    $('#budgetPercentage').text(percentage.toFixed(1));
+                    $('#amountProgress').css('width', Math.min(percentage, 100) + '%');
+                    
+                    if (percentage > 100) {
+                        $('#amountProgress').removeClass('bg-success').addClass('bg-danger');
+                    } else {
+                        $('#amountProgress').removeClass('bg-danger').addClass('bg-success');
+                    }
+                });
+                
+                $('form').submit(function (e) {
+                    var amount = parseFloat($('input[name="amount"]').val());
+                    var budget = @tender.Budget.Value;
+                    
+                    if (amount > budget) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error de validación',
+                            text: 'El monto propuesto no puede superar el presupuesto máximo de ' + budget.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }),
+                            confirmButtonClass: 'btn btn-danger'
+                        });
+                    }
+                });
+                </text>
+            }
+
+            // Validación de tipos de archivo
+            $('.custom-file-input').on('change', function() {
+                var fileInput = $(this);
+                var files = fileInput.get(0).files;
+                var allowedExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx'];
+                
+                for(var i = 0; i < files.length; i++) {
+                    var extension = '.' + files[i].name.split('.').pop().toLowerCase();
+                    if(!allowedExtensions.includes(extension)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Tipo de archivo no permitido',
+                            text: 'Solo se permiten archivos PDF, Word y Excel'
+                        });
+                        fileInput.val('');
+                        return false;
+                    }
+                }
+            });
+            
+            // Contador regresivo
+            function updateCountdown() {
+                var endDate = new Date('@tender.EndDate.ToString("o")');
+                var now = new Date();
+                var diff = endDate - now;
+                
+                if (diff > 0) {
+                    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    $('#countdown').html('<i class="fas fa-clock mr-1"></i> ' + 
+                                      days + 'd ' + hours + 'h ' + minutes + 'm');
+                } else {
+                    $('#countdown').html('<i class="fas fa-times-circle mr-1"></i> Cerrada');
+                    $('#proposalForm').find('input, textarea, button[type="submit"]').prop('disabled', true);
+                }
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 60000);
+            
+            // Animaciones en hover
+            $('.btn').hover(
+                function() { 
+                    if (!$(this).hasClass('animate__infinite')) {
+                        $(this).addClass('animate__animated animate__pulse');
+                    }
+                },
+                function() { 
+                    if (!$(this).hasClass('animate__infinite')) {
+                        $(this).removeClass('animate__animated animate__pulse');
+                    }
+                }
+            );
+        });
+    </script>
+} 
