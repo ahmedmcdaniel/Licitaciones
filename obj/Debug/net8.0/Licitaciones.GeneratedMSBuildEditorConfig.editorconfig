@@ -17,101 +17,101 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Licitaciones
 build_property.RootNamespace = Licitaciones
-build_property.ProjectDir = C:\Users\ahmed\source\repos\Licitaciones\Licitaciones\
+build_property.ProjectDir = C:\Users\ahmed\Downloads\Licitaciones\Licitaciones\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\ahmed\source\repos\Licitaciones\Licitaciones
+build_property.MSBuildProjectDirectory = C:\Users\ahmed\Downloads\Licitaciones\Licitaciones
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Account/AccessDenied.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Account/AccessDenied.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBY2Nlc3NEZW5pZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Account/Login.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Evaluations/Create.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Evaluations/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZhbHVhdGlvbnNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Evaluations/Details.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Evaluations/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZhbHVhdGlvbnNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Evaluations/Edit.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Evaluations/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZhbHVhdGlvbnNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Home/Index.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Home/Privacy.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Proposals/Create.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Proposals/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcG9zYWxzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Proposals/Details.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Proposals/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcG9zYWxzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Proposals/Index.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Proposals/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcG9zYWxzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Shared/Error.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Tenders/Create.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Tenders/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVuZGVyc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Tenders/Details.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Tenders/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVuZGVyc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Tenders/Edit.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Tenders/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVuZGVyc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Tenders/Index.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Tenders/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVuZGVyc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Users/Create.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Users/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Users/Details.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Users/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Users/Index.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/_ViewImports.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/_ViewStart.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ahmed/source/repos/Licitaciones/Licitaciones/Views/Shared/_Layout.cshtml]
+[C:/Users/ahmed/Downloads/Licitaciones/Licitaciones/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-07mxetcnkl

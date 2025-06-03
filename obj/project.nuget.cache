@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nMaAPZtpDKs=",
+  "dgSpecHash": "Q5Ud7Il2ahE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ahmed\\source\\repos\\Licitaciones\\Licitaciones\\Licitaciones.csproj",
+  "projectFilePath": "C:\\Users\\ahmed\\Downloads\\Licitaciones\\Licitaciones\\Licitaciones.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ahmed\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\ahmed\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
