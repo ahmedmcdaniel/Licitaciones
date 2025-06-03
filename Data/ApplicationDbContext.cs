@@ -18,6 +18,14 @@ namespace Licitaciones.Data
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<TenderResult> TenderResults { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql("Host=dpg-d0vic615pdvs738ie3fg-a;Database=licitaciones_sql;Username=admin;Password=lCdDlOQn5EECDYXb0Z8U0XGJfl04GqfA");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
